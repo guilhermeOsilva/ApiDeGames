@@ -47,6 +47,9 @@ function createGame() {
 
         games.forEach((game) => {
           var item = document.createElement("li");
+          item.setAttribute("data-id", game.id);
+          item.setAttribute("data-title", game.title);
+          item.setAttribute("data-price", game.price);
           item.innerHTML = "game: " + game.title + " price: R$" + game.price;
           list.appendChild(item);
         });
