@@ -16,9 +16,16 @@
     <input type="number" name="year" id="year" placeholder="Ano" /><br />
     <input type="number" name="price" id="price" placeholder="Preço" /><br />
     <button onclick="createGame()">Criar</button>
+    <hr>
+    <h4>Editar game</h4>
+    <input type="text" name="titleEdit" id="titleEdit" placeholder="Titulo" /><br />
+    <input type="number" name="yearEdit" id="yearEdit" placeholder="Ano" /><br />
+    <input type="number" name="priceEdit" id="priceEdit" placeholder="Preço" /><br />
+
   </body>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
+
     function createGame() {
       var titleInput = document.getElementById("title");
       var yearInput = document.getElementById("price");
@@ -30,18 +37,7 @@
         price: priceInput.value,
       };
 
-      function deleteGame(listItem) {
-        var id = ListItem.getAttribute("data-id");
-        console.log(ListItem);
-        console.log(id);
-
-        axios
-          .delete("http://localhost:3000/game/" + id)
-          .then((response) => {
-            alert("Game deletado");
-          })
-          .catch((error) => console.log(error));
-      }
+      
 
       axios
         .post("http://localhost:3000/game", game)
@@ -55,9 +51,18 @@
         });
     }
 
-    function deleteGame(listitem) {
-      console.log(listitem);
-    }
+    function deleteGame(ListItem) {
+        var id = ListItem.getAttribute("data-id");
+        console.log(ListItem);
+        console.log(id);
+
+        axios
+          .delete("http://localhost:3000/game/" + id)
+          .then((response) => {
+            alert("Game deletado");
+          })
+          .catch((error) => console.log(error));
+      }
 
     axios
       .get("http://localhost:3000/games")
