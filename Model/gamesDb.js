@@ -8,9 +8,6 @@ const Game = sequelize.define("gamesDbs", {
     primaryKey: true,
     autoIncrement: true,
   },
-  nome: {
-    type: DataTypes.STRING,
-  },
   title: {
     type: DataTypes.STRING,
   },
