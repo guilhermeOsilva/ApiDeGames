@@ -9,12 +9,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-
-
-
-app.get("/games", (req, res) => {
+app.get("/games", async (req, res) => {
   res.statusCode = 200;
-  Game.findAll().then((response) => {
+  await Game.findAll().then((response) => {
     res.send(response);
   });
 });
@@ -48,14 +45,7 @@ app.delete("/game/:id", (req, res) => {
     res.sendStatus(400);
   } else {
     var id = parseInt(req.params.id);
-    var index = DB.games.findIndex((g) => g.id == id);
-
-    if (index == -1) {
-      res.sendStatus(404);
-    } else {
-      DB.games.splice(index, 1);
-      res.sendStatus(200);
-    }
+    var exlude = Game.destroy({ where: { id: id } });
   }
 });
 
@@ -88,7 +78,7 @@ app.put("/game/:id", (req, res) => {
     }
   }
 });
-Sequelize.sync();
+
 app.listen(3000, () => {
   console.log("API RODANDO!");
 });
