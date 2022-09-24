@@ -23,8 +23,8 @@ const Game = sequelize.define("gamesDbs", {
 });
 
 Game.sync().then((response) => {
-  response.sendStatus(200);
-});
+    console.log("working")
+}).catch((error) => console.log(error));
 
 
 module.exports = Game;
