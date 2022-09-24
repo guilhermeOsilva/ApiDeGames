@@ -14,7 +14,7 @@ app.use(cors());
 
 app.get("/games", (req, res) => {
   res.statusCode = 200;
-  User.findAll().then((response) => {
+  Game.findAll().then((response) => {
     res.send(response);
   });
 });
@@ -39,7 +39,7 @@ app.get("/game/:id", (req, res) => {
 
 app.post("/game", (req, res) => {
   var { title, price, year } = req.body;
-  var insertGame = User.create({ title: title, price: price, year: year });
+  var insertGame = Game.create({ title: title, price: price, year: year });
   res.sendStatus(200);
 });
 
