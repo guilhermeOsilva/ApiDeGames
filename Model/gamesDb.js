@@ -22,7 +22,7 @@ const Game = sequelize.define("gamesDbs", {
   },
 });
 
-User.sync().then((response) => {
+Game.sync().then((response) => {
   response.sendStatus(200);
 });
 
