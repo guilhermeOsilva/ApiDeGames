@@ -55,7 +55,7 @@ app.put("/game/:id", (req, res) => {
   } else {
     var id = parseInt(req.params.id);
 
-    var game = DB.games.find((g) => g.id == id);
+    var game = Game.findOne({_id: id});
 
     if (game != undefined) {
       var { title, price, year } = req.body;
