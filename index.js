@@ -13,12 +13,12 @@ app.use(bodyParser.json());
 app.use(cors());
 
 function authToken(req, res, next) {
-  const authtoken = req.headers["authorization"];
+  const authToken = req.headers["authorization"];
 
-  if (authtoken !== undefined) {
-    const bearerToken = authtoken.split(" ");
+  if (authToken !== undefined) {
+    const bearerToken = authToken.split(" ");
     var token = bearerToken[1];
-    console.log(bearerToken);
+  
     jwt.verify(token, passwordSecret, (err, data) => {
       if (err) {
         res.status(401);
@@ -33,7 +33,7 @@ function authToken(req, res, next) {
 app.get("/games", authToken, async (req, res) => {
   await Game.findAll().then((response) => {
     res.json(response);
-    res.statusCode = 200;
+    res.status(200);
   });
 });
 
@@ -51,7 +51,7 @@ app.get("/game/:id", (req, res) => {
         res.sendStatus(404);
       }
     });
-    console.log(game);
+    
   }
 });
 
