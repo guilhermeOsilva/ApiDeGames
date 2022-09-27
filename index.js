@@ -19,23 +19,21 @@ function authToken(req, res, next) {
     const bearerToken = authtoken.split(" ");
     var token = bearerToken[1];
     console.log(bearerToken);
-    jwt.verify(token, passwordSecret, (err, data)=> {
-      if(err) {
+    jwt.verify(token, passwordSecret, (err, data) => {
+      if (err) {
         res.status(401);
-        res.json({err: "Token Invalido"});
+        res.json({ err: "Token Invalido" });
+      } else {
+        res.status(200);
+        next();
       }
     });
-  } else {
-    req.token = token;
-    res.status(200);
-
   }
-  next();
 }
 app.get("/games", authToken, async (req, res) => {
-  res.statusCode = 200;
   await Game.findAll().then((response) => {
-    res.send(response, req.token);
+    res.json(response);
+    res.statusCode = 200;
   });
 });
 
