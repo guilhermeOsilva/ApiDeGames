@@ -15,7 +15,7 @@ const Game = sequelize.define("gamesDbs", {
     type: DataTypes.TEXT,
   },
   price: {
-    type: DataTypes.DECIMAL(3, 2),
+    type: DataTypes.DECIMAL(5, 2)
   },
 });
 
