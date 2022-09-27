@@ -18,7 +18,7 @@ function authToken(req, res, next) {
   if (authToken !== undefined) {
     const bearerToken = authToken.split(" ");
     var token = bearerToken[1];
-  
+
     jwt.verify(token, passwordSecret, (err, data) => {
       if (err) {
         res.status(401);
@@ -51,14 +51,26 @@ app.get("/game/:id", (req, res) => {
         res.sendStatus(404);
       }
     });
-    
   }
 });
 
-app.post("/game", (req, res) => {
+app.post("/game", async(req, res) => {
   var { title, price, year } = req.body;
-  var insertGame = Game.create({ title: title, price: price, year: year });
-  res.sendStatus(200);
+
+  if (title, price, year == undefined) {
+    res.status(400);
+    res.json({ error: "valores indefinidos" });
+
+  } else {
+
+    await Game.create({ title: title, price: price, year: year })
+    .catch(function (err) {
+      res.status(400);
+      res.json({ err: "erro ao criar um novo game" });
+    });
+    res.status(200);
+    res.json({message: "game criado"})
+  }
 });
 
 app.delete("/game/:id", (req, res) => {
@@ -76,7 +88,7 @@ app.put("/game/:id", async (req, res) => {
   } else {
     var id = parseInt(req.params.id);
 
-    var game = Game.findOne({ _id: id });
+    var game = await Game.findOne({ _id: id });
 
     if (game != undefined) {
       var { title, price, year } = req.body;
@@ -100,11 +112,12 @@ app.put("/game/:id", async (req, res) => {
   }
 });
 
-app.post("/auth", async (req, res) => {
+app.post("/auth", (req, res) => {
   var bd = {
     email: "teste",
     password: "password",
   };
+
   jwt.sign(
     { email: bd.email, password: bd.password },
     passwordSecret,
@@ -112,6 +125,7 @@ app.post("/auth", async (req, res) => {
     (err, token) => {
       if (err) {
         res.status(400);
+        res.json({ err: "falha interna" });
       } else {
         res.status(200);
         res.json({ token: token });
