@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="./css/style.css">
     <title>Document</title>
   </head>
   <body>
@@ -111,9 +112,10 @@
           item.setAttribute("data-id", game.id);
           item.setAttribute("data-title", game.title);
           item.setAttribute("data-price", game.price);
+          item.setAttribute("data-year", game.year);
 
           item.innerHTML =
-            game.id + " game: " + game.title + " price: R$" +  game.price + " "+ game.year;
+            game.id + "<br> Game: " + game.title + "<br> price: R$ " +  game.price + "<br> Year:  "+ game.year + "<br>";
 
           
 
