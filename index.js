@@ -4,15 +4,38 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const Sequelize = require("./Model/db");
 const Game = require("./Model/gamesDb");
+const jwt = require("jsonwebtoken");
+
+var passwordSecret = "5^7zbG!o";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/games", async (req, res) => {
+function authToken(req, res, next) {
+  const authtoken = req.headers["authorization"];
+
+  if (authtoken !== undefined) {
+    const bearerToken = authtoken.split(" ");
+    var token = bearerToken[1];
+    console.log(bearerToken);
+    jwt.verify(token, passwordSecret, (err, data)=> {
+      if(err) {
+        res.status(401);
+        res.json({err: "Token Invalido"});
+      }
+    });
+  } else {
+    req.token = token;
+    res.status(200);
+
+  }
+  next();
+}
+app.get("/games", authToken, async (req, res) => {
   res.statusCode = 200;
   await Game.findAll().then((response) => {
-    res.send(response);
+    res.send(response, req.token);
   });
 });
 
@@ -49,7 +72,7 @@ app.delete("/game/:id", (req, res) => {
   }
 });
 
-app.put("/game/:id",async (req, res) => {
+app.put("/game/:id", async (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
@@ -61,7 +84,7 @@ app.put("/game/:id",async (req, res) => {
       var { title, price, year } = req.body;
 
       if (title != undefined) {
-       await Game.update({ title: title }, { where: { id: id } });
+        await Game.update({ title: title }, { where: { id: id } });
       }
 
       if (price != undefined) {
@@ -69,7 +92,7 @@ app.put("/game/:id",async (req, res) => {
       }
 
       if (year != undefined) {
-       await Game.update({ year: year },{ where: { id: id } });
+        await Game.update({ year: year }, { where: { id: id } });
       }
 
       res.sendStatus(200);
@@ -77,6 +100,27 @@ app.put("/game/:id",async (req, res) => {
       res.sendStatus(404);
     }
   }
+});
+
+app.post("/auth", async (req, res) => {
+  var bd = {
+    email: "teste",
+    password: "password",
+  };
+  jwt.sign(
+    { email: bd.email, password: bd.password },
+    passwordSecret,
+    { expiresIn: "36h" },
+    (err, token) => {
+      if (err) {
+        res.status(400);
+      } else {
+        res.status(200);
+        res.json({ token: token });
+      }
+    }
+  );
+  res.status(200);
 });
 
 app.listen(3000, () => {
