@@ -52,17 +52,19 @@ price: preço do jogo;
 }
 ```
 ##### Respostas OK! 200
-Caso a resposta ocorra, será mostrado uma resposta OK.
+Caso a resposta ocorra, será mostrado uma resposta : game criado.
 ##### Exemplo De Resposta: 
 ```
-OK
+{
+    "message": "game criado"
+}
 ```
-##### Falha na autenticação! 401
-Caso essa falha ocorra, isso significa que aconteceu alguma falha no processo de autenticação. Motivos : Token invalido/expirado.
+##### Falha na autenticação! 400
+Caso essa falha ocorra, isso significa que aconteceu alguma falha no processo de criação. Motivos : valores nulos ou indefinidos.
 ##### Exemplo De Resposta:
 ```
 {
-    "err": "Token Invalido"
+    "error": "valores indefinidos"
 }
 ```
 
@@ -94,3 +96,4 @@ Caso essa falha ocorra, isso significa que aconteceu alguma falha no processo de
     err: "falha interna"
 }
 ```
+#Em Desenvolvimento
