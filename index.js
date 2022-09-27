@@ -32,7 +32,24 @@ function authToken(req, res, next) {
 }
 app.get("/games", authToken, async (req, res) => {
   await Game.findAll().then((response) => {
-    res.json(response);
+    var HATEOAS = [
+      {
+        href: "http://localhost:3000/game/0",
+        method: "DELETE",
+        rel: "delete_game",
+      },
+      {
+        href: "http://localhost:3000/game/1",
+        method: "POST",
+        rel: "get_game",
+      },
+      {
+        href: "http://localhost:3000/auth",
+        method: "POST",
+        rel: "authentication",
+      },
+    ];
+    res.json({response,_links: HATEOAS});
     res.status(200);
   });
 });
@@ -41,12 +58,32 @@ app.get("/game/:id", (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
+   
     var id = parseInt(req.params.id);
+
+    var HATEOAS = [
+      {
+        href: "http://localhost:3000/game/" + id,
+        method: "DELETE",
+        rel: "delete_game",
+      },
+      {
+        href: "http://localhost:3000/game/" + id,
+        method: "PUT",
+        rel: "edit_game",
+      },
+      {
+        href: "http://localhost:3000/games",
+        method: "Get",
+        rel: "get_all_games",
+      },
+      
+    ];
 
     var game = Game.findOne({ _id: id }).then((response) => {
       if (game != undefined) {
-        res.statusCode = 200;
-        res.send(response);
+        res.status(200);
+        res.json({game: response, link: HATEOAS});
       } else {
         res.sendStatus(404);
       }
@@ -54,26 +91,27 @@ app.get("/game/:id", (req, res) => {
   }
 });
 
-app.post("/game", async(req, res) => {
+app.post("/game", async (req, res) => {
   var { title, price, year } = req.body;
 
-  if (title, price, year == undefined) {
+  if ((title, price, year == undefined)) {
     res.status(400);
     res.json({ error: "valores indefinidos" });
-
   } else {
 
-    await Game.create({ title: title, price: price, year: year })
-    .catch(function (err) {
-      res.status(400);
-      res.json({ err: "erro ao criar um novo game" });
-    });
+   var game = await Game.create({ title: title, price: price, year: year }).catch(
+      function (err) {
+        res.status(400);
+        res.json({ err: "erro ao criar um novo game" });
+      }
+    );
     res.status(200);
-    res.json({message: "game criado"})
+    res.json({game:game, link: HATEOAS });
   }
 });
 
 app.delete("/game/:id", (req, res) => {
+  
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
@@ -86,6 +124,7 @@ app.put("/game/:id", async (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
+    
     var id = parseInt(req.params.id);
 
     var game = await Game.findOne({ _id: id });
