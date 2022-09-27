@@ -49,27 +49,27 @@ app.delete("/game/:id", (req, res) => {
   }
 });
 
-app.put("/game/:id", (req, res) => {
+app.put("/game/:id",async (req, res) => {
   if (isNaN(req.params.id)) {
     res.sendStatus(400);
   } else {
     var id = parseInt(req.params.id);
 
-    var game = Game.findOne({_id: id});
+    var game = Game.findOne({ _id: id });
 
     if (game != undefined) {
       var { title, price, year } = req.body;
 
       if (title != undefined) {
-        game.title = title;
+       await Game.update({ title: title }, { where: { id: id } });
       }
 
       if (price != undefined) {
-        game.price = price;
+        await Game.update({ price: price }, { where: { id: id } });
       }
 
       if (year != undefined) {
-        game.year = year;
+       await Game.update({ year: year },{ where: { id: id } });
       }
 
       res.sendStatus(200);
